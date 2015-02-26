@@ -139,13 +139,9 @@ public class AccountManager implements Serializable{
 			in.close();
 			file.close();
 
-
-
-
 		} catch(IOException i) {
 			System.out.println("No file found!");
 			i.printStackTrace();
-
 		} catch(ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
