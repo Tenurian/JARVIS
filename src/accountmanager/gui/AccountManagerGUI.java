@@ -2,7 +2,6 @@ package accountmanager.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -111,11 +110,8 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 
 		this.add(mainpanel);
 
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		Dimension d = tk.getScreenSize();
 		this.pack();
-		this.setResizable(false);
-		this.setLocation((d.width/2)-(this.getWidth()/2), (d.height/2)-(this.getHeight()/2));
+        this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 

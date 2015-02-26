@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -46,11 +45,8 @@ public class Jarvis extends JFrame implements ActionListener{
 		this.add(favsitespanel, c);
 		
 		
-		
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		Dimension d = tk.getScreenSize();
 		this.pack();
-		this.setLocation((d.width/2)-(this.getWidth()/2), (d.height/2)-(this.getHeight()/2));
+        this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 	
@@ -73,6 +69,10 @@ public class Jarvis extends JFrame implements ActionListener{
 		am.setActionCommand("launchaccountmanager");
 		am.addActionListener(this);
 		
+		
+		cc.setActionCommand("launchconversioncalc");
+		cc.addActionListener(this);
+		
 		buttonpanel.add(am);
 		buttonpanel.add(cb);
 		buttonpanel.add(cc);
@@ -87,6 +87,9 @@ public class Jarvis extends JFrame implements ActionListener{
 		switch(e.getActionCommand()){
 		case "launchaccountmanager":
 			new accountmanager.gui.AccountManagerGUI();
+			break;
+		case "launchconversioncalc":
+			new conversioncalc.ConvCalc();
 			break;
 		}
 	}
