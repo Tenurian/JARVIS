@@ -12,6 +12,7 @@ public class weightConv extends JPanel{
 	private static final long serialVersionUID = 4759856220835706925L;
 	private static final double LB_TO_KG = 0.453592;
 	private static final double KG_TO_LB = 2.20462;
+	@SuppressWarnings("rawtypes")
 	JComboBox impBox,metBox;
 	JButton impButton,metButton;
 	static JTextField impIn,metIn;

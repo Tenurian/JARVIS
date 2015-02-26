@@ -68,8 +68,8 @@ public class Jarvis extends JFrame implements ActionListener{
 		
 		am.setActionCommand("launchaccountmanager");
 		am.addActionListener(this);
-		
-		
+		cb.setActionCommand("launchcontactbook");
+		cb.addActionListener(this);
 		cc.setActionCommand("launchconversioncalc");
 		cc.addActionListener(this);
 		
@@ -90,6 +90,9 @@ public class Jarvis extends JFrame implements ActionListener{
 			break;
 		case "launchconversioncalc":
 			new conversioncalc.ConvCalc();
+			break;
+		case "launchcontactbook":
+			new contactbook.ContactBook();
 			break;
 		}
 	}
