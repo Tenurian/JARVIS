@@ -70,6 +70,9 @@ public class Jarvis extends JFrame implements ActionListener{
 		cc = new JButton("Conversion Calculator");
 		cb = new JButton("Contact Book");
 		
+		am.setActionCommand("launchaccountmanager");
+		am.addActionListener(this);
+		
 		buttonpanel.add(am);
 		buttonpanel.add(cb);
 		buttonpanel.add(cc);
@@ -80,7 +83,11 @@ public class Jarvis extends JFrame implements ActionListener{
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		
+	public void actionPerformed(ActionEvent e) {
+		switch(e.getActionCommand()){
+		case "launchaccountmanager":
+			new accountmanager.gui.AccountManagerGUI();
+			break;
+		}
 	}
 }
