@@ -31,7 +31,6 @@ public class WeatherTest {
 			System.out.println(forecast);
 			System.out.println(w.getIconURL(i));
 	        BufferedImage image = ImageIO.read((java.net.URL)w.getIconURL(i));
-//	        image.
 	        JLabel label = new JLabel(new ImageIcon(image));
 	        frame.add(label);
 		}
