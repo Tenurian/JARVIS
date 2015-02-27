@@ -15,6 +15,7 @@ public class Hotlink extends JPanel implements ActionListener, Serializable{
 	private JButton go = new JButton("Go");
 	private JButton del = new JButton("x");
 	private JLabel name = new JLabel("Default");
+	private HotlinkFrame container;
 	
 	public Hotlink(String linkName, String link) {
 		this.linkName = linkName;
@@ -37,6 +38,10 @@ public class Hotlink extends JPanel implements ActionListener, Serializable{
 		go.addActionListener(this);
 		del.addActionListener(this);
 	}
+	
+	public void setHotlinkContainer(HotlinkFrame container){
+		this.container = container;
+	}
 
 	public void actionPerformed(ActionEvent i) {
 		if(i.getSource() == go) {
@@ -48,7 +53,7 @@ public class Hotlink extends JPanel implements ActionListener, Serializable{
 				e.printStackTrace();
 			}
 		} else {
-			HotlinkFrame.removeLink(this);
+			container.removeLink(this);
 		}
 	}
 	

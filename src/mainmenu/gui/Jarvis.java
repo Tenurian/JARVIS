@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import mainmenu.favsites.HotlinkFrame;
+
 public class Jarvis extends JFrame implements ActionListener{
 
 	/**
@@ -56,8 +58,8 @@ public class Jarvis extends JFrame implements ActionListener{
 	}
 	
 	public void genfavsitespanel(){
-		favsitespanel = new JPanel();
-		favsitespanel.setBackground(new Color(0,102,0));
+		favsitespanel = new HotlinkFrame();
+		((HotlinkFrame)favsitespanel).initialize();
 	}
 	
 	public void genbuttonpanel(){

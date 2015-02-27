@@ -6,22 +6,19 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class HotlinkFrame implements ActionListener {
+public class HotlinkFrame extends JPanel implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static HotlinkManager manager = HotlinkManager.loadHotlinkManager("hotlinks");
-	private static JFrame frame = new JFrame("Hotlinks");
 	private static JScrollPane pane = null;
 	private static JPanel container = new JPanel();
 	private static JPanel buttonPanel = new JPanel();
 	private static JButton add = new JButton("Add");
 	
-	public static void main(String[] args) {
-		new HotlinkFrame().initialize();
-	}
-	
 	public void initialize() {
-		frame.setLayout(new BorderLayout());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(300, 250);
+		this.setLayout(new BorderLayout());
 		JLabel label = new JLabel("Your favorite sites:");
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		pane = new JScrollPane(container);
@@ -30,37 +27,36 @@ public class HotlinkFrame implements ActionListener {
 		for(Hotlink h : manager.getLinkList()) {
 			container.add(h);
 		}
-		frame.setResizable(false);
-		frame.add(label, BorderLayout.NORTH);
-		frame.add(pane, BorderLayout.CENTER);
-		frame.add(buttonPanel, BorderLayout.SOUTH);
-		frame.setVisible(true);
+		this.add(label, BorderLayout.NORTH);
+		this.add(pane, BorderLayout.CENTER);
+		this.add(buttonPanel, BorderLayout.SOUTH);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String name = JOptionPane.showInputDialog(null, "What would you like to call your new hotlink?");
 		String link = JOptionPane.showInputDialog(null, "What is the actual URL to your hotlink?");
 		Hotlink h = new Hotlink(name, link);
+		h.setHotlinkContainer(this);
 		manager.getLinkList().add(h);
 		container.add(h);
 		manager.saveHotlinkManager("hotlinks");
-		frame.revalidate();
-		frame.repaint();
+		this.revalidate();
+		this.repaint();
 	}
 
-	public static HotlinkManager getManager() {
+	public HotlinkManager getManager() {
 		return manager;
 	}
 
-	public static void setManager(HotlinkManager manager) {
+	public void setManager(HotlinkManager manager) {
 		HotlinkFrame.manager = manager;
 	}
 
-	public static void removeLink(Hotlink hotlink) {
+	public void removeLink(Hotlink hotlink) {
 		manager.getLinkList().remove(hotlink);
 		manager.saveHotlinkManager("hotlinks");
 		container.remove(hotlink);
-		frame.revalidate();
-		frame.repaint();
+		this.revalidate();
+		this.repaint();
 	}
 }
