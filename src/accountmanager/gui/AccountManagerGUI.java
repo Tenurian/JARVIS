@@ -22,6 +22,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -41,13 +43,13 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 7902517699264179235L;
 	private static final String PATHNAME = ((System.getProperty("user.home") + "/Documents/").replace("\\", "/"));
 	private AccountManager profile;
-	private boolean saved;
+	private boolean saved, loaded;
 	private String programurl = null;
 	JPanel view, delete;
 	JTabbedPane add;
 	JPanel email, game, store, socmed, other;
-	TableModel viewmodel, delmodel;
-	JTable viewtable, deltable;
+	TableModel viewmodel, editmodel;
+	JTable viewtable, edittable;
 	JTabbedPane mainpanel;
 
 	JTextField 
@@ -99,6 +101,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 	 */
 	public AccountManagerGUI(){
 		saved = false;
+		loaded = false;
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setPreferredSize(new Dimension(450,460));
 
@@ -111,7 +114,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 		this.add(mainpanel);
 
 		this.pack();
-        this.setLocationRelativeTo(null);
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 
@@ -192,14 +195,14 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 		delete.setLayout(new BoxLayout(delete, BoxLayout.Y_AXIS));
 		JPanel tablepanel = new JPanel(), buttonpanel = new JPanel(), attribPanel = new JPanel(new BorderLayout());
 
-		deltable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-		deltable.getTableHeader().setReorderingAllowed(false);
-		deltable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		edittable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+		edittable.getTableHeader().setReorderingAllowed(false);
+		edittable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		tablepanel.setSize(new Dimension(445, 300));
 
 		tablepanel.setLayout(new BorderLayout());
-		tablepanel.add(deltable.getTableHeader(), BorderLayout.PAGE_START);
-		tablepanel.add(deltable, BorderLayout.CENTER);
+		tablepanel.add(edittable.getTableHeader(), BorderLayout.PAGE_START);
+		tablepanel.add(edittable, BorderLayout.CENTER);
 		tablepanel.setSize(new Dimension(445, 300));
 		delete.add(tablepanel);
 
@@ -504,7 +507,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 		}
 
 		viewmodel = new DefaultTableModel(accs, columnnames);
-		delmodel = new DefaultTableModel(accs, columnnames);
+		editmodel = new DefaultTableModel(accs, columnnames);
 		viewtable = new JTable(viewmodel)
 		{
 			/**
@@ -524,13 +527,12 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 				return out;
 			}
 		};
-		deltable = new JTable(delmodel)
+		edittable = new JTable(editmodel)
 		{
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 7691398939992393797L;
-
 			public String getToolTipText( MouseEvent e )
 			{
 				String out = "";
@@ -543,6 +545,27 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 				return out;
 			}
 		};
+
+		edittable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent event) {
+				if (edittable.getSelectedRow() > -1) {
+					Account in = profile.getAccountList().get(edittable.getSelectedRow());
+					editnametf.setText(in.getUsername());
+					editpasstf.setText(in.getPassword());
+					editdesc.setText(in.getDesc());
+					if(in.getURL()!=null){
+						if(!in.getURL().equals("")){
+							editcba.setSelected(true);
+							editlinktf.setText(in.getURL());
+						}
+					}
+				}
+			}
+		});
+
+
+
 		mainpanel.removeAll();
 		mainpanel.repaint();
 		generatePanels();
@@ -554,7 +577,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 		switch(e.getActionCommand()){
 		case "delete":
 			try {
-				profile.getAccountList().remove(deltable.getSelectedRow());
+				profile.getAccountList().remove(edittable.getSelectedRow());
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(new JFrame(),"You must select an account before you can delete","No Account Selected",JOptionPane.WARNING_MESSAGE);
 			}finally{
@@ -567,10 +590,16 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 				if(viewtable.getRowCount() > 0 && !saved){
 					int i = JOptionPane.showConfirmDialog(new JFrame(), "Do you want to save first?");
 					if(i == JOptionPane.YES_OPTION){
-						String filename = (String)JOptionPane.showInputDialog(new JFrame(),"Save as:","Save",JOptionPane.PLAIN_MESSAGE);
-						if(filename !=null && filename != ""){
-							profile.setPassword((String)JOptionPane.showInputDialog(new JFrame(),"Password:","Input Password",JOptionPane.PLAIN_MESSAGE));
-							profile.saveAccountManager(PATHNAME + filename+".sav");
+						if(!loaded){
+							String filename = (String)JOptionPane.showInputDialog(new JFrame(),"Save as:","Save",JOptionPane.PLAIN_MESSAGE);
+							if(filename !=null && filename != ""){
+								profile.setPassword((String)JOptionPane.showInputDialog(new JFrame(),"Password:","Input Password",JOptionPane.PLAIN_MESSAGE));
+								profile.saveAccountManager(PATHNAME + filename+".sav");
+								saved = true;
+								this.dispose();
+							}
+						}else{
+							profile.saveAccountManager();
 							saved = true;
 							this.dispose();
 						}
@@ -590,6 +619,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 						profile.setPassword((String)JOptionPane.showInputDialog(new JFrame(),"Password:","Input Password",JOptionPane.PLAIN_MESSAGE));
 						profile.saveAccountManager(PATHNAME + filename);
 						saved = true;
+						loaded = true;
 					}
 				}
 			}
@@ -604,6 +634,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 				updateTables();
 			}
 			updateTables();
+			saved = true;
 			mainpanel.setSelectedIndex(0);
 			break;
 		case "add":
@@ -697,8 +728,10 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 
 			break;
 		case "save":
-			saved = true;
-			profile.saveAccountManager();
+			if(loaded){
+				saved = true;
+				profile.saveAccountManager();
+			}
 			break;
 		case "saveas":
 			String filename = (String)JOptionPane.showInputDialog(new JFrame(),"Save as:","Save",JOptionPane.PLAIN_MESSAGE);
@@ -709,6 +742,8 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 			}
 			break;
 		case "new":
+			saved = false;
+			loaded = false;
 			profile = new AccountManager();
 			updateTables();
 			mainpanel.setSelectedIndex(2);
@@ -732,8 +767,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 					String url = ((Account)profile.getAccountList().get(viewtable.getSelectedRow())).getURL();
 
 					if(url != null){
-
-						if(((Account)profile.getAccountList().get(viewtable.getSelectedRow())).getActType() == "program"){
+						if(((Account)profile.getAccountList().get(viewtable.getSelectedRow())).getActType().equals("program")){
 							try {
 								Runtime.getRuntime().exec(url);
 								System.out.println("Game profile");
@@ -741,6 +775,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 
 							}
 						}else{
+							System.out.println(((Account)profile.getAccountList().get(viewtable.getSelectedRow())).getActType());
 							openUrl(url);
 						}
 					}else{
@@ -764,15 +799,16 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 			int returnVal2 = chooser2.showOpenDialog(getParent());
 			if(returnVal2 == JFileChooser.APPROVE_OPTION) {
 				programurl = chooser2.getSelectedFile().getAbsolutePath();
-//				System.out.println(programurl);
+				//				System.out.println(programurl);
 			}
 			editlinktf.setText(programurl);
 			break;
 		case "update":
 			Account editing, ax;
-			if(deltable.getSelectedRow() != -1){
-				ax = profile.getAccountList().get(deltable.getSelectedRow());
-				profile.getAccountList().remove(deltable.getSelectedRow());
+			if(edittable.getSelectedRow() != -1){
+				saved = false;
+				ax = profile.getAccountList().get(edittable.getSelectedRow());
+				profile.getAccountList().remove(edittable.getSelectedRow());
 				String type = ax.getActType();
 				String outlink = null;
 				String username, password;
@@ -780,8 +816,17 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 					if(programurl == null){
 						if(editlinktf.getText() != null){
 							if(!editlinktf.getText().equals("")){
-								System.out.println("Using a URL");
-								outlink = editlinktf.getText();
+								if(!editlinktf.getText().contains(".exe")){
+									if(!(type.equals("email") || type.equals("social") || type.equals("store")))
+										type = "social";
+									System.out.println("Using a URL");
+									outlink = editlinktf.getText();
+								}else{
+									type = "program";
+									programurl = editlinktf.getText();
+									outlink = editlinktf.getText();
+									System.out.println("Using a src: "+outlink);
+								}
 							}
 						}
 					}else if(!programurl.equals("")){
@@ -797,11 +842,13 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 							type = "program";
 						}else{
 							System.out.println("Using a URL");
+							if(!(type.equals("email") || type.equals("social") || type.equals("store")))
+								type = "social";
 							outlink = editlinktf.getText();
 						}
 					}
 				}
-				
+
 				if(editnametf.getText() == null){
 					username = ax.getUsername();
 				}else if(editnametf.getText().equals("")){
@@ -809,7 +856,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 				}else{
 					username = editnametf.getText();
 				}
-				
+
 				if(editpasstf.getText() == null){
 					password = ax.getUsername();
 				}else if(editpasstf.getText().equals("")){
@@ -817,19 +864,19 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 				}else{
 					password = editpasstf.getText();
 				}
-				
+
 				editing = new Other(username, password, type , editdesc.getText());
 				if(outlink != null){
 					editing.setURL(outlink);
 				}
 				profile.getAccountList().add(editing);
-				
+
 				editnametf.setText("");
 				editpasstf.setText("");
 				editlinktf.setText("");
 				programurl = null;
 				editdesc.setText("");
-				
+
 				updateTables();
 				mainpanel.setSelectedIndex(1);
 			}
@@ -849,7 +896,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 				url = "http://"+url;
 			}
 		}
-		
+
 		if(java.awt.Desktop.isDesktopSupported() ) {
 			java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
 

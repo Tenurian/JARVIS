@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -44,15 +46,15 @@ public class ContactBook extends JFrame implements ActionListener {
 	private static final String PATHNAME = ((System.getProperty("user.home") + "/Documents/").replace("\\", "/"));
 	private boolean saved, loaded;
 	JPanel view, edit, add;
-	TableModel viewmodel, editmodel;
-	JTable viewtable, edittable;
+	TableModel viewmodel, editmodel, addmodel;
+	JTable viewtable, edittable, addtable;
 	JTabbedPane mainpane;
 	ContactBookProfile profile = new ContactBookProfile();
 	private String[] columnnames = {"Name","Cell #","Work #","Personal eMail","Work eMail","Address"};
 	public ContactBook(){
 		super("Contact Book");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setPreferredSize(new Dimension(500,500));
+		this.setPreferredSize(new Dimension(600,500));
 
 		loaded = false;
 
@@ -85,6 +87,7 @@ public class ContactBook extends JFrame implements ActionListener {
 
 		viewmodel = new DefaultTableModel(accs, columnnames);
 		editmodel = new DefaultTableModel(accs, columnnames);
+		addmodel = new DefaultTableModel(accs, columnnames);
 		viewtable = new JTable(viewmodel)
 		{
 			/**
@@ -110,6 +113,40 @@ public class ContactBook extends JFrame implements ActionListener {
 			 * 
 			 */
 			private static final long serialVersionUID = 7691398939992393797L;
+			public String getToolTipText( MouseEvent e )
+			{
+				String out = "";
+				int row = rowAtPoint( e.getPoint() );
+				int column = columnAtPoint( e.getPoint() );
+				if(row != -1 && column != -1){
+					Object value = getValueAt(row, column);
+					out = value == null ? null : value.toString();
+				}
+				return out;
+			}
+		};
+		
+		edittable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		    @Override
+		    public void valueChanged(ListSelectionEvent event) {
+		        if (edittable.getSelectedRow() > -1) {
+					Contact in = profile.getContactList().get(edittable.getSelectedRow());
+					enametf.setText(in.getName());
+					ecellnotf.setText(in.getCellnumber());
+					eworknotf.setText(in.getWorknumber());
+					epersemtf.setText(in.getPersonalemail());
+					eworkemtf.setText(in.getWorkemail());
+					eaddresstf.setText(in.getAddress());
+		        }
+		    }
+		});
+		
+		addtable = new JTable(addmodel)
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 7691398939992393797L;
 
 			public String getToolTipText( MouseEvent e )
 			{
@@ -123,6 +160,7 @@ public class ContactBook extends JFrame implements ActionListener {
 				return out;
 			}
 		};
+		
 		mainpane.removeAll();
 		mainpane.repaint();
 		generatePanels();
@@ -278,7 +316,10 @@ public class ContactBook extends JFrame implements ActionListener {
 
 	private void generateAddPanel() {
 		add = new JPanel();
-		JPanel  
+		add.setLayout(new BoxLayout(add, BoxLayout.Y_AXIS));
+		JPanel 
+		tablepanel = new JPanel(),
+		attribpanel = new JPanel(),
 		buttonpanel = new JPanel(), 
 		namepanel = new JPanel(), 
 		cellpanel = new JPanel(), 
@@ -286,6 +327,19 @@ public class ContactBook extends JFrame implements ActionListener {
 		persemailpanel = new JPanel(), 
 		wkemailpanel = new JPanel(), 
 		addresspanel = new JPanel();
+
+
+		addtable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		addtable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+		addtable.getTableHeader().setReorderingAllowed(false);
+		tablepanel.setSize(new Dimension(445, 300));
+
+		tablepanel.setLayout(new BorderLayout());
+		tablepanel.add(addtable.getTableHeader(), BorderLayout.PAGE_START);
+		tablepanel.add(addtable, BorderLayout.CENTER);
+
+
+		attribpanel.setLayout(new BoxLayout(attribpanel, BoxLayout.Y_AXIS));
 		buttonpanel.setLayout(new BoxLayout(buttonpanel, BoxLayout.X_AXIS));
 		namepanel.setLayout(new BoxLayout(namepanel, BoxLayout.X_AXIS));
 		cellpanel.setLayout(new BoxLayout(cellpanel, BoxLayout.X_AXIS));
@@ -293,7 +347,6 @@ public class ContactBook extends JFrame implements ActionListener {
 		persemailpanel.setLayout(new BoxLayout(persemailpanel, BoxLayout.X_AXIS));
 		wkemailpanel.setLayout(new BoxLayout(wkemailpanel, BoxLayout.X_AXIS));
 		addresspanel.setLayout(new BoxLayout(addresspanel, BoxLayout.X_AXIS));
-
 		JLabel
 		namelabel = new JLabel("Name: "),
 		celllabel = new JLabel("Cell #:"),
@@ -319,20 +372,26 @@ public class ContactBook extends JFrame implements ActionListener {
 		wkemailpanel.add(aworkemtf);
 		addresspanel.add(addresslabel);
 		addresspanel.add(aaddresstf);
-		add.add(namepanel);
-		add.add(cellpanel);
-		add.add(wknmpanel);
-		add.add(persemailpanel);
-		add.add(wkemailpanel);
-		add.add(addresspanel);
+		attribpanel.add(namepanel);
+		attribpanel.add(cellpanel);
+		attribpanel.add(wknmpanel);
+		attribpanel.add(persemailpanel);
+		attribpanel.add(wkemailpanel);
+		attribpanel.add(addresspanel);
 
-		JButton addbutton = new JButton("Add"), exitbutton = new JButton("Exit");
-		addbutton.setActionCommand("add");
-		addbutton.addActionListener(this);
-		exitbutton.setActionCommand("exit");
-		exitbutton.addActionListener(this);
-		buttonpanel.add(addbutton);
-		buttonpanel.add(exitbutton);
+		JButton add2 = new JButton("Add");
+		add2.setActionCommand("add");
+		add2.setToolTipText("Updates the selected contact with the filled out fields");
+		add2.addActionListener(this);
+		buttonpanel.add(add2);
+		JButton exit = new JButton("Exit");
+		exit.setActionCommand("exit");
+		exit.setToolTipText("Exits the program");
+		exit.addActionListener(this);
+		buttonpanel.add(exit);
+
+		add.add(tablepanel);
+		add.add(attribpanel);
 		add.add(buttonpanel);
 	}
 
@@ -341,13 +400,29 @@ public class ContactBook extends JFrame implements ActionListener {
 		switch(e.getActionCommand()){
 		case "add":
 			Contact c = new Contact(anametf.getText());
-			c.setCellnumber(acellnotf.getText());
-			c.setWorknumber(aworknotf.getText());
+			String cellno = acellnotf.getText(), workno = aworknotf.getText();
+			cellno = cellno.replaceAll("()- ", "");
+			workno = workno.replaceAll("()- ", "");
+			
+			if(!cellno.equals("") && cellno.length()==10){
+				cellno = "("+cellno.substring(0, 3)+") "+cellno.substring(3, 6)+"-"+cellno.substring(6, 9);
+			}else{
+				cellno = "INVALID_NUMBER";
+			}
+			if(!workno.equals("") && workno.length()==10){
+				workno = "("+workno.substring(0, 3)+") "+workno.substring(3, 6)+"-"+workno.substring(6, 9);
+			}else{
+				workno = "INVALID_NUMBER";
+			}
+
+			c.setCellnumber(cellno);
+			c.setWorknumber(workno);
 			c.setPersonalemail(apersemtf.getText());
 			c.setWorkemail(aworkemtf.getText());
 			c.setAddress(aaddresstf.getText());
 			profile.getContactList().add(c);
 			updateTables();
+			mainpane.setSelectedIndex(2);
 			break;
 		case "edit":
 			Contact editing, ax;
@@ -366,6 +441,8 @@ public class ContactBook extends JFrame implements ActionListener {
 				if(ecellnotf.getText() != null){
 					if(!ecellnotf.getText().equals("")){
 						celln = ecellnotf.getText();
+						celln = celln.replaceAll("()- ", "");
+						celln = "("+celln.substring(0, 3)+") "+celln.substring(3, 6)+"-"+celln.substring(6, 9);
 					}else{
 						celln = ax.getCellnumber();
 					}
@@ -373,6 +450,8 @@ public class ContactBook extends JFrame implements ActionListener {
 				if(eworknotf.getText() != null){
 					if(!eworknotf.getText().equals("")){
 						workn = eworknotf.getText();
+						workn = workn.replaceAll("()- ", "");
+						workn = "("+celln.substring(0, 3)+") "+workn.substring(3, 6)+"-"+workn.substring(6, 9);
 					}else{
 						workn = ax.getWorknumber();
 					}
@@ -447,9 +526,9 @@ public class ContactBook extends JFrame implements ActionListener {
 			mainpane.setSelectedIndex(0);
 			break;
 		case "quicksave":
+			profile.saveContactProfile();
 			saved = true;
 			loaded = true;
-			profile.saveContactProfile();
 			break;
 		case "saveas":
 			String filename = (String)JOptionPane.showInputDialog(new JFrame(),"Save as:","Save",JOptionPane.PLAIN_MESSAGE);
