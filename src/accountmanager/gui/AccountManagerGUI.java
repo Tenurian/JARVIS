@@ -149,12 +149,12 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 		view.add(tablepanel);
 
 		JButton
-		open = new JButton("Open"),
+		open = new JButton("Load"),
 		saveas = new JButton("Save As"),
 		save = new JButton("Save"),
 		exit = new JButton("Exit"),
 		newb = new JButton("New"),
-		run = new JButton("Run");
+		run = new JButton("Open");
 
 		newb.setActionCommand("new");
 		newb.setToolTipText("Creates a new Profile");
@@ -570,8 +570,9 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 						String filename = (String)JOptionPane.showInputDialog(new JFrame(),"Save as:","Save",JOptionPane.PLAIN_MESSAGE);
 						if(filename !=null && filename != ""){
 							profile.setPassword((String)JOptionPane.showInputDialog(new JFrame(),"Password:","Input Password",JOptionPane.PLAIN_MESSAGE));
-							profile.saveAccountManager(PATHNAME + filename);
+							profile.saveAccountManager(PATHNAME + filename+".sav");
 							saved = true;
+							this.dispose();
 						}
 					}else if(i == JOptionPane.NO_OPTION){
 						this.dispose();

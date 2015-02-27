@@ -31,10 +31,6 @@ public class ContactBookProfile implements Serializable{
 	private static byte[] keyValue = "SecretKe".getBytes();
 	private String PATH = null;
 	private String password;
-	
-	public ArrayList<Contact> getAccountList(){
-		return contacts;
-	}
 
 	public ArrayList<Contact> getContactList() {
 		return contacts;
@@ -107,7 +103,7 @@ public class ContactBookProfile implements Serializable{
 		return this.password;
 	}
 	
-	public static ContactBookProfile loadAccountManager(String fileName, String password) {
+	public static ContactBookProfile loadContactProfile(String fileName, String password) {
 		ContactBookProfile manager = new ContactBookProfile();
 		try {
 			Key key  = new SecretKeySpec(keyValue, "DES");

@@ -1,7 +1,13 @@
 package contactbook;
 
-public class Contact {
+import java.io.Serializable;
+
+public class Contact implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5089136351577721492L;
 	private String name, cellnumber, worknumber, personalemail, workemail, address;
 	
 	public Contact(String name){
@@ -11,6 +17,15 @@ public class Contact {
 		setPersonalemail("");
 		setWorkemail("");
 		setAddress("");
+	}
+
+	public Contact(String name, String celln, String workn, String pemail, String wemail, String address) {
+		this.name = name;
+		this.cellnumber = celln;
+		this.worknumber = workn;
+		this.personalemail = pemail;
+		this.workemail = wemail;
+		this.address = address;
 	}
 
 	public String getName() {
