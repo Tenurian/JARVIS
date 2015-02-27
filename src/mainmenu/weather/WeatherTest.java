@@ -24,7 +24,6 @@ public class WeatherTest {
 		Calendar c = Calendar.getInstance();
 		c.setTime(c.getTime());
 		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-//		frame.setLayout(new BoxLayout(frame, BoxLayout.Y_AXIS));
 		for(int i = 0; i < 7; i++){
 			String forecast = "";
 			forecast+= days[dayOfWeek-1+i];
@@ -32,6 +31,7 @@ public class WeatherTest {
 			System.out.println(forecast);
 			System.out.println(w.getIconURL(i));
 	        BufferedImage image = ImageIO.read((java.net.URL)w.getIconURL(i));
+//	        image.
 	        JLabel label = new JLabel(new ImageIcon(image));
 	        frame.add(label);
 		}
