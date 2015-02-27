@@ -22,7 +22,9 @@ public class WeatherInfo {
 	private JsonArray days;
 	private String[] desc;
 	private double[] temps;
-
+	private double[] max;
+	private double[] min;
+	
 	public WeatherInfo(){
 		try{
 			url = new URL(sURL);
@@ -32,6 +34,8 @@ public class WeatherInfo {
 			rootobj = root.getAsJsonObject();
 			days = rootobj.get("list").getAsJsonArray();
 			temps = new double[days.size()];
+			max = new double[days.size()];
+			min = new double[days.size()];
 			desc = new String[days.size()];
 			setTemps();
 		}
@@ -47,6 +51,8 @@ public class WeatherInfo {
 		for (int i = 0; i < temps.length;i++){
 			temps[i] = ((JsonObject) ((JsonObject) days.get(i)).get("temp")).get("day").getAsDouble();
 			desc[i] = ((JsonObject) ((JsonArray) ((JsonObject) days.get(i)).get("weather")).get(0)).get("description").getAsString();
+			max[i] = ((JsonObject) ((JsonObject) days.get(i)).get("temp")).get("max").getAsDouble();
+			min[i] = ((JsonObject) ((JsonObject) days.get(i)).get("temp")).get("min").getAsDouble();
 		}
 	}
 	
@@ -64,6 +70,12 @@ public class WeatherInfo {
 
 	public double getTemp(int day){
 		return this.temps[day];
+	}
+	public double getMin(int day){
+		return this.min[day];
+	}
+	public double getMax(int day){
+		return this.max[day];
 	}
 	public String getDesc(int day){
 		return this.desc[day];
