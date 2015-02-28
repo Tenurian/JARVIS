@@ -1,5 +1,6 @@
 package mainmenu.favsites;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class Hotlink extends JPanel implements ActionListener, Serializable{
 	private HotlinkFrame container;
 	
 	public Hotlink(String linkName, String link) {
+		this.setLayout(new BorderLayout());
 		this.linkName = linkName;
 		this.link = link;
 		this.link.toLowerCase();
@@ -30,11 +32,12 @@ public class Hotlink extends JPanel implements ActionListener, Serializable{
 		name.setText(this.linkName);
 		go.setHorizontalAlignment(SwingConstants.LEFT);
 		name.setHorizontalAlignment(SwingConstants.CENTER);
-		this.add(go);
+		this.add(go, BorderLayout.WEST);
 		//this.add(Box.createGlue());
-		this.add(name);
 		this.add(Box.createHorizontalGlue());
-		this.add(del);
+		this.add(name, BorderLayout.CENTER);
+		this.add(Box.createHorizontalGlue());
+		this.add(del, BorderLayout.EAST);
 		go.addActionListener(this);
 		del.addActionListener(this);
 	}

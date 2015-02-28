@@ -43,7 +43,7 @@ public class ContactBook extends JFrame implements ActionListener {
 	eworkemtf,
 	eaddresstf;
 
-	private static final String PATHNAME = ((System.getProperty("user.home") + "/Documents/").replace("\\", "/"));
+	private static final String PATHNAME = ((System.getProperty("user.home") + "/Documents/JARVIS/").replace("\\", "/"));
 	private boolean saved, loaded;
 	JPanel view, edit, add;
 	TableModel viewmodel, editmodel, addmodel;

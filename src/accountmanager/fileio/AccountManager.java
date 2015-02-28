@@ -1,5 +1,6 @@
 package accountmanager.fileio;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class AccountManager implements Serializable{
 	private String password = null;
 	private static byte[] keyValue = "SecretKe".getBytes();
 	private String PATH = null;
-
+	private static final String DOCSPATH = ((System.getProperty("user.home") + "/Documents/").replace("\\", "/"));
 	/**
 	 * Saves and encrypts the AccountManager to the C:\USERS\USER\DOCUMENTS\ Folder as a .sav
 	 * @param fileName the name of the file (no extension)
@@ -44,6 +45,7 @@ public class AccountManager implements Serializable{
 			Cipher ecipher = Cipher.getInstance("DES");
 			ecipher.init(Cipher.ENCRYPT_MODE, key);
 			SealedObject sealed = new SealedObject(this, ecipher);
+			new File(DOCSPATH + "JARVIS/").mkdir();
 			FileOutputStream file = new FileOutputStream(fileName);
 			ObjectOutputStream out = new ObjectOutputStream(file);
 			out.writeObject(sealed);
@@ -76,6 +78,7 @@ public class AccountManager implements Serializable{
 				Cipher ecipher = Cipher.getInstance("DES");
 				ecipher.init(Cipher.ENCRYPT_MODE, key);
 				SealedObject sealed = new SealedObject(this, ecipher);
+				new File(DOCSPATH + "JARVIS/").mkdir();
 				FileOutputStream file = new FileOutputStream(PATH);
 				ObjectOutputStream out = new ObjectOutputStream(file);
 				out.writeObject(sealed);
@@ -103,17 +106,17 @@ public class AccountManager implements Serializable{
 	 * Reads in and decrypts the AccountManager from the selected file, then checks if the user enters the correct password.\n
 	 * If the user inputs an incorrect password, it overrides the AccountManager with a new AccountManager with no entries
 	 * @param fileName The PATH and filename for the file
-	 * @param password	The input password to attempt and unlock the profile
+	 * @param password The input password to attempt and unlock the profile
 	 * @return manager The account profile to be returned, new AccountManager if the password was incorrect
 	 */
 	public static AccountManager loadAccountManager(String fileName, String password) {
 		AccountManager manager = new AccountManager();
 		try {
-			Key key  = new SecretKeySpec(keyValue, "DES");
+			Key key = new SecretKeySpec(keyValue, "DES");
 			Cipher dcipher = Cipher.getInstance("DES");
 			dcipher.init(Cipher.DECRYPT_MODE, key);
 
-
+			new File(DOCSPATH + "JARVIS/").mkdir();
 			FileInputStream file = new FileInputStream(fileName);
 			ObjectInputStream in = new ObjectInputStream(file);
 			SealedObject sealed = (SealedObject) in.readObject();
@@ -122,9 +125,9 @@ public class AccountManager implements Serializable{
 			manager = (AccountManager) sealed.getObject(dcipher);
 
 
-			//			if(!manager.getPassword().equals(password)) {
-			//				manager = new AccountManager();
-			//			}
+			// if(!manager.getPassword().equals(password)) {
+			// manager = new AccountManager();
+			// }
 
 			if(password != null && manager.getPassword()!=null){
 				if(!manager.getPassword().equals(password)) {
@@ -140,8 +143,8 @@ public class AccountManager implements Serializable{
 			file.close();
 
 		} catch(IOException i) {
-			System.out.println("No file found!");
-			i.printStackTrace();
+			//System.out.println("No file found!");
+//			i.printStackTrace();
 		} catch(ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
@@ -178,7 +181,7 @@ public class AccountManager implements Serializable{
 	protected String getPassword() {
 		return password;
 	}
-	
+
 	/**
 	 * Used to set the password for a new profile.
 	 * @param password The String value for the password.

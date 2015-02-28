@@ -16,7 +16,7 @@ public class HotlinkFrame extends JPanel implements ActionListener {
 	private static JPanel container = new JPanel();
 	private static JPanel buttonPanel = new JPanel();
 	private static JButton add = new JButton("Add");
-	
+
 	public void initialize() {
 		this.setLayout(new BorderLayout());
 		JLabel label = new JLabel("Your favorite sites:");
@@ -34,14 +34,23 @@ public class HotlinkFrame extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String name = JOptionPane.showInputDialog(null, "What would you like to call your new hotlink?");
-		String link = JOptionPane.showInputDialog(null, "What is the actual URL to your hotlink?");
-		Hotlink h = new Hotlink(name, link);
-		h.setHotlinkContainer(this);
-		manager.getLinkList().add(h);
-		container.add(h);
-		manager.saveHotlinkManager("hotlinks");
-		this.revalidate();
-		this.repaint();
+		String link = null;
+		if(name!= null){
+			if(!name.equalsIgnoreCase("")){
+				link = JOptionPane.showInputDialog(null, "What is the actual URL to your hotlink?");
+			}
+		}
+		if(name != null && link != null){
+			if(!name.equalsIgnoreCase("") && !link.equalsIgnoreCase("")){
+				Hotlink h = new Hotlink(name, link);
+				h.setHotlinkContainer(this);
+				manager.getLinkList().add(h);
+				container.add(h);
+				manager.saveHotlinkManager("hotlinks");
+				this.revalidate();
+				this.repaint();
+			}
+		}
 	}
 
 	public HotlinkManager getManager() {
@@ -58,5 +67,11 @@ public class HotlinkFrame extends JPanel implements ActionListener {
 		container.remove(hotlink);
 		this.revalidate();
 		this.repaint();
+		this.revalidate();
+		this.repaint();
+		container.repaint();
+		//		this.getParent().repaint();
+		//		this.getParent().revalidate();
+		//		this.getParent().repaint();
 	}
 }

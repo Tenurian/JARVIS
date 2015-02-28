@@ -41,7 +41,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 7902517699264179235L;
-	private static final String PATHNAME = ((System.getProperty("user.home") + "/Documents/").replace("\\", "/"));
+	private static final String PATHNAME = ((System.getProperty("user.home") + "/Documents/JARVIS/").replace("\\", "/"));
 	private AccountManager profile;
 	private boolean saved, loaded;
 	private String programurl = null;
@@ -628,7 +628,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 			chooser.setFileFilter(filter);
 			int returnVal = chooser.showOpenDialog(getParent());
 			if(returnVal == JFileChooser.APPROVE_OPTION) {
-				//				System.out.println("You chose to open this file: " +chooser.getSelectedFile().getAbsolutePath());
+				//				//System.out.println("You chose to open this file: " +chooser.getSelectedFile().getAbsolutePath());
 				String password = (String)JOptionPane.showInputDialog(new JFrame(),"Password:","Input Password",JOptionPane.PLAIN_MESSAGE);
 				profile = AccountManager.loadAccountManager(chooser.getSelectedFile().getAbsolutePath(), password);
 				updateTables();
@@ -770,12 +770,12 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 						if(((Account)profile.getAccountList().get(viewtable.getSelectedRow())).getActType().equals("program")){
 							try {
 								Runtime.getRuntime().exec(url);
-								System.out.println("Game profile");
+//								//System.out.println("Game profile");
 							} catch (IOException e1) {
 
 							}
 						}else{
-							System.out.println(((Account)profile.getAccountList().get(viewtable.getSelectedRow())).getActType());
+//							//System.out.println(((Account)profile.getAccountList().get(viewtable.getSelectedRow())).getActType());
 							openUrl(url);
 						}
 					}else{
@@ -799,7 +799,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 			int returnVal2 = chooser2.showOpenDialog(getParent());
 			if(returnVal2 == JFileChooser.APPROVE_OPTION) {
 				programurl = chooser2.getSelectedFile().getAbsolutePath();
-				//				System.out.println(programurl);
+				//				//System.out.println(programurl);
 			}
 			editlinktf.setText(programurl);
 			break;
@@ -819,13 +819,13 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 								if(!editlinktf.getText().contains(".exe")){
 									if(!(type.equals("email") || type.equals("social") || type.equals("store")))
 										type = "social";
-									System.out.println("Using a URL");
+//									//System.out.println("Using a URL");
 									outlink = editlinktf.getText();
 								}else{
 									type = "program";
 									programurl = editlinktf.getText();
 									outlink = editlinktf.getText();
-									System.out.println("Using a src: "+outlink);
+//									//System.out.println("Using a src: "+outlink);
 								}
 							}
 						}
@@ -837,11 +837,11 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 							outlink = programurl;
 							type = "program";
 						}else if(programurl.equals(editlinktf.getText())){
-							System.out.println("Using a src");
+							//System.out.println("Using a src");
 							outlink = programurl;
 							type = "program";
 						}else{
-							System.out.println("Using a URL");
+							//System.out.println("Using a URL");
 							if(!(type.equals("email") || type.equals("social") || type.equals("store")))
 								type = "social";
 							outlink = editlinktf.getText();

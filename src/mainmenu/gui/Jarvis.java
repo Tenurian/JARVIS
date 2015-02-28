@@ -33,7 +33,7 @@ public class Jarvis extends JFrame implements ActionListener{
 	public Jarvis(){
 		super("JARVIS - Personal Java Desktop Assistant v0.0.1");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setPreferredSize(new Dimension(1500,750));
+		this.setPreferredSize(new Dimension(950,500));
 		this.setLayout(new GridBagLayout());
 
 		genbuttonpanel();
@@ -49,9 +49,13 @@ public class Jarvis extends JFrame implements ActionListener{
 		c.gridheight = 3;
 		c.gridy = 1;
 		c.fill = GridBagConstraints.BOTH;
+		weatherpanel.setMaximumSize(new Dimension(1920, 50));
+		weatherpanel.setPreferredSize(new Dimension(1920, 50));
 		this.add(weatherpanel, c);
-		c.gridheight = 3;
+		c.gridheight = 1;
 		c.gridy = 4;
+		favsitespanel.setPreferredSize(new Dimension(1920, 250));
+		favsitespanel.setMinimumSize(new Dimension(950, 250));
 		this.add(favsitespanel, c);
 		
 		
@@ -62,8 +66,6 @@ public class Jarvis extends JFrame implements ActionListener{
 	
 	public void genweatherpanel(){
 		weatherpanel = new JPanel(new GridLayout());
-		JPanel innerpanel = new JPanel();
-
 		String[] days = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 		WeatherInfo w = new WeatherInfo();
 		Calendar c = Calendar.getInstance();
@@ -71,10 +73,6 @@ public class Jarvis extends JFrame implements ActionListener{
 		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 		for(int i = 0; i < 7; i++){
 			JPanel dayPanel = new JPanel(new GridBagLayout());
-			String forecast = "";
-			forecast+= days[dayOfWeek-1+i];
-			forecast+=": \nTemp: "+w.getTemp(i)+"\nConditions: "+w.getDesc(i);
-			System.out.println(forecast);
 			GridBagConstraints x = new GridBagConstraints();
 			JLabel daylab = new JLabel(days[dayOfWeek-1+i]);
 			JLabel highlab = new JLabel("High: "+w.getMax(i));

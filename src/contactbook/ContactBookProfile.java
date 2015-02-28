@@ -1,5 +1,6 @@
 package contactbook;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class ContactBookProfile implements Serializable{
-	
+
 	/**
 	 * 
 	 */
@@ -31,11 +32,12 @@ public class ContactBookProfile implements Serializable{
 	private static byte[] keyValue = "SecretKe".getBytes();
 	private String PATH = null;
 	private String password;
+	private static final String DOCSPATH = ((System.getProperty("user.home") + "/Documents/").replace("\\", "/"));
 
 	public ArrayList<Contact> getContactList() {
 		return contacts;
 	}
-	
+
 	public void saveContactProfile(){
 		if(PATH !=null){
 			try {
@@ -43,6 +45,7 @@ public class ContactBookProfile implements Serializable{
 				Cipher ecipher = Cipher.getInstance("DES");
 				ecipher.init(Cipher.ENCRYPT_MODE, key);
 				SealedObject sealed = new SealedObject(this, ecipher);
+				new File(DOCSPATH + "JARVIS/").mkdir();
 				FileOutputStream file = new FileOutputStream(PATH);
 				ObjectOutputStream out = new ObjectOutputStream(file);
 				out.writeObject(sealed);
@@ -65,7 +68,7 @@ public class ContactBookProfile implements Serializable{
 			}
 		}
 	}
-	
+
 	public void saveContactProfile(String fileName) {
 		this.PATH=fileName;
 		try {
@@ -73,6 +76,7 @@ public class ContactBookProfile implements Serializable{
 			Cipher ecipher = Cipher.getInstance("DES");
 			ecipher.init(Cipher.ENCRYPT_MODE, key);
 			SealedObject sealed = new SealedObject(this, ecipher);
+			new File(DOCSPATH + "JARVIS/").mkdir();
 			FileOutputStream file = new FileOutputStream(fileName);
 			ObjectOutputStream out = new ObjectOutputStream(file);
 			out.writeObject(sealed);
@@ -98,19 +102,19 @@ public class ContactBookProfile implements Serializable{
 	public void setPassword(String password){
 		this.password = password;
 	}
-	
+
 	public String getPassword(){
 		return this.password;
 	}
-	
+
 	public static ContactBookProfile loadContactProfile(String fileName, String password) {
 		ContactBookProfile manager = new ContactBookProfile();
 		try {
-			Key key  = new SecretKeySpec(keyValue, "DES");
+			Key key = new SecretKeySpec(keyValue, "DES");
 			Cipher dcipher = Cipher.getInstance("DES");
 			dcipher.init(Cipher.DECRYPT_MODE, key);
 
-
+			new File(DOCSPATH + "JARVIS/").mkdir();
 			FileInputStream file = new FileInputStream(fileName);
 			ObjectInputStream in = new ObjectInputStream(file);
 			SealedObject sealed = (SealedObject) in.readObject();
@@ -129,10 +133,10 @@ public class ContactBookProfile implements Serializable{
 			}
 			in.close();
 			file.close();
-			
+
 		} catch(IOException i) {
-			System.out.println("No file found!");
-			i.printStackTrace();
+			//System.out.println("No file found!");
+//			i.printStackTrace();
 		} catch(ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {

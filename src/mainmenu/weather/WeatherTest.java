@@ -38,7 +38,7 @@ public class WeatherTest extends JPanel{
 //			String forecast = "";
 //			forecast+= days[dayOfWeek-1+i];
 //			forecast+=": \nTemp: "+w.getTemp(i)+"\nConditions: "+w.getDesc(i);
-//			System.out.println(forecast);
+//			//System.out.println(forecast);
 //			JPanel dayPanel = new JPanel(new GridBagLayout());
 //			GridBagConstraints x = new GridBagConstraints();
 //			JLabel daylab = new JLabel(days[dayOfWeek-1+i]);
@@ -82,7 +82,7 @@ public class WeatherTest extends JPanel{
 			String forecast = "";
 			forecast+= days[dayOfWeek-1+i];
 			forecast+=": \nTemp: "+w.getTemp(i)+"\nConditions: "+w.getDesc(i);
-			System.out.println(forecast);
+			//System.out.println(forecast);
 			GridBagConstraints x = new GridBagConstraints();
 			JLabel daylab = new JLabel(days[dayOfWeek-1+i]);
 			JLabel highlab = new JLabel("High: "+w.getMax(i));

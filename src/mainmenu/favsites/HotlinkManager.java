@@ -1,5 +1,6 @@
 package mainmenu.favsites;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,14 +23,16 @@ import javax.crypto.spec.SecretKeySpec;
 public class HotlinkManager implements Serializable {
 	private ArrayList<Hotlink> linkList = new ArrayList<Hotlink>();
 	private static byte[] keyValue = "SecretKe".getBytes();
-	
+	private static final String DOCSPATH = ((System.getProperty("user.home") + "/Documents/").replace("\\", "/"));
+
 	public void saveHotlinkManager(String fileName) {
 		try {
 			Key key = new SecretKeySpec(keyValue, "DES");
 			Cipher ecipher = Cipher.getInstance("DES");
 			ecipher.init(Cipher.ENCRYPT_MODE, key);
 			SealedObject sealed = new SealedObject(this, ecipher);
-			FileOutputStream file = new FileOutputStream(fileName + ".sav");
+			new File(DOCSPATH + "JARVIS/").mkdir();
+			FileOutputStream file = new FileOutputStream(DOCSPATH + "JARVIS/" + fileName + ".hl");
 			ObjectOutputStream out = new ObjectOutputStream(file);
 			out.writeObject(sealed);
 			out.close();
@@ -50,21 +53,22 @@ public class HotlinkManager implements Serializable {
 			e.printStackTrace();
 		} 
 	}
-	
+
 	public static HotlinkManager loadHotlinkManager(String fileName) {
 		HotlinkManager manager = new HotlinkManager();
 		try {
-			Key key  = new SecretKeySpec(keyValue, "DES");
+			Key key = new SecretKeySpec(keyValue, "DES");
 			Cipher dcipher = Cipher.getInstance("DES");
 			dcipher.init(Cipher.DECRYPT_MODE, key);
-			FileInputStream file = new FileInputStream(fileName + ".sav");
+			new File(DOCSPATH + "JARVIS/").mkdir();
+			FileInputStream file = new FileInputStream(DOCSPATH + "JARVIS/" + fileName + ".hl");
 			ObjectInputStream in = new ObjectInputStream(file);
 			SealedObject sealed = (SealedObject) in.readObject();
 			manager = (HotlinkManager) sealed.getObject(dcipher);
 			in.close();
 			file.close();
 		} catch(IOException i) {
-			System.out.println("No file found!");
+			//System.out.println("No file found!");
 		} catch(ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
