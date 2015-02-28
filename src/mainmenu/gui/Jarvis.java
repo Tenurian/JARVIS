@@ -4,14 +4,22 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Calendar;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import mainmenu.favsites.HotlinkFrame;
+import mainmenu.weather.WeatherInfo;
 
 public class Jarvis extends JFrame implements ActionListener{
 
@@ -53,7 +61,50 @@ public class Jarvis extends JFrame implements ActionListener{
 	}
 	
 	public void genweatherpanel(){
-		weatherpanel = new JPanel();
+		weatherpanel = new JPanel(new GridLayout());
+		JPanel innerpanel = new JPanel();
+
+		String[] days = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+		WeatherInfo w = new WeatherInfo();
+		Calendar c = Calendar.getInstance();
+		c.setTime(c.getTime());
+		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+		for(int i = 0; i < 7; i++){
+			JPanel dayPanel = new JPanel(new GridBagLayout());
+			String forecast = "";
+			forecast+= days[dayOfWeek-1+i];
+			forecast+=": \nTemp: "+w.getTemp(i)+"\nConditions: "+w.getDesc(i);
+			System.out.println(forecast);
+			GridBagConstraints x = new GridBagConstraints();
+			JLabel daylab = new JLabel(days[dayOfWeek-1+i]);
+			JLabel highlab = new JLabel("High: "+w.getMax(i));
+			JLabel lowlab = new JLabel("Low: "+w.getMin(i));
+			JLabel deslab = new JLabel("Conditions: "+w.getDesc(i));
+	        BufferedImage image = null;
+			try {
+				image = ImageIO.read((java.net.URL)w.getIconURL(i));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        JLabel img = new JLabel(new ImageIcon(image));
+	        x.fill = GridBagConstraints.BOTH;
+	        x.gridx=0;
+	        x.gridy=0;
+	        dayPanel.add(daylab, x);
+	        x.gridx=1;
+	        dayPanel.add(highlab, x);
+	        x.gridx=0;
+	        x.gridy=1;
+	        dayPanel.add(img, x);
+	        x.gridx=1;
+	        dayPanel.add(lowlab, x);
+	        x.gridwidth=2;
+	        x.gridx=0;
+	        x.gridy=2;
+	        dayPanel.add(deslab, x);
+	        dayPanel.setBackground(new Color(0,126,164));
+			weatherpanel.add(dayPanel);
+		}
 		weatherpanel.setBackground(new Color(0,126,164));
 	}
 	
