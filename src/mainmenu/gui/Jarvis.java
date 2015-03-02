@@ -31,7 +31,7 @@ public class Jarvis extends JFrame implements ActionListener{
 	 */
 	private static final long serialVersionUID = 935456660030463827L;
 	private JPanel buttonpanel, weatherpanel, favsitespanel, exepanel;
-	private JButton am, cc, cb;
+	private JButton am, cc, cb, as;
 	
 	public static final boolean COLOR_PANELS = false;
 	
@@ -139,6 +139,7 @@ public class Jarvis extends JFrame implements ActionListener{
 		am = new JButton("Account Manager");
 		cc = new JButton("Conversion Calculator");
 		cb = new JButton("Contact Book");
+		as = new JButton("Play Asteroids");
 		
 		am.setActionCommand("launchaccountmanager");
 		am.addActionListener(this);
@@ -146,10 +147,13 @@ public class Jarvis extends JFrame implements ActionListener{
 		cb.addActionListener(this);
 		cc.setActionCommand("launchconversioncalc");
 		cc.addActionListener(this);
+		as.setActionCommand("asteroids");
+		as.addActionListener(this);
 		
 		buttonpanel.add(am);
 		buttonpanel.add(cb);
 		buttonpanel.add(cc);
+		buttonpanel.add(as);
 	}
 	
 	public static void main(String[] args) {
@@ -167,6 +171,13 @@ public class Jarvis extends JFrame implements ActionListener{
 			break;
 		case "launchcontactbook":
 			new contactbook.ContactBook();
+			break;
+		case "asteroids":
+			try {
+				Runtime.getRuntime().exec("asteroids.exe");
+			} catch (IOException e1) {
+
+			}
 			break;
 		}
 	}
