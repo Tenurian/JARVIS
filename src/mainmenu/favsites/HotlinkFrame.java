@@ -1,10 +1,11 @@
 package mainmenu.favsites;
 
-
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+
+import mainmenu.gui.Jarvis;
 
 public class HotlinkFrame extends JPanel implements ActionListener {
 	/**
@@ -18,8 +19,14 @@ public class HotlinkFrame extends JPanel implements ActionListener {
 	private static JButton add = new JButton("Add");
 
 	public void initialize() {
+
+		if(Jarvis.COLOR_PANELS){
+			this.setBackground(new Color(200,50,190));
+			container.setBackground(new Color(200,50,190));
+		}
+
 		this.setLayout(new BorderLayout());
-		JLabel label = new JLabel("Your favorite sites:");
+		JLabel label = new JLabel("Your favorite sites:", JLabel.CENTER);
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		pane = new JScrollPane(container);
 		add.addActionListener(this);

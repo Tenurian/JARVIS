@@ -28,12 +28,12 @@ public class Hotlink extends JPanel implements ActionListener, Serializable{
 		}
 		while(this.link == null || !this.link.contains("www.")) {
 			this.link = JOptionPane.showInputDialog(null, "Your link does not contain 'www.'!");
-		} this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		}
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		name.setText(this.linkName);
 		go.setHorizontalAlignment(SwingConstants.LEFT);
 		name.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(go, BorderLayout.WEST);
-		//this.add(Box.createGlue());
 		this.add(Box.createHorizontalGlue());
 		this.add(name, BorderLayout.CENTER);
 		this.add(Box.createHorizontalGlue());

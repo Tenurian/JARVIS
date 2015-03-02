@@ -12,12 +12,15 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
+import mainmenu.exebar.ShortcutFrame;
 import mainmenu.favsites.HotlinkFrame;
 import mainmenu.weather.WeatherInfo;
 
@@ -27,18 +30,23 @@ public class Jarvis extends JFrame implements ActionListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 935456660030463827L;
-	private JPanel buttonpanel, weatherpanel, favsitespanel;
+	private JPanel buttonpanel, weatherpanel, favsitespanel, exepanel;
 	private JButton am, cc, cb;
 	
+	public static final boolean COLOR_PANELS = false;
+	
 	public Jarvis(){
-		super("JARVIS - Personal Java Desktop Assistant v0.0.1");
+		super("JARVIS - Java Run Virtual Assistant v1.0.0.1");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setPreferredSize(new Dimension(950,500));
+		this.setPreferredSize(new Dimension(950,700));
+		this.setMinimumSize(getPreferredSize());
 		this.setLayout(new GridBagLayout());
 
 		genbuttonpanel();
 		genweatherpanel();
 		genfavsitespanel();
+		
+		genExepanel();
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridheight = 1;
@@ -56,7 +64,15 @@ public class Jarvis extends JFrame implements ActionListener{
 		c.gridy = 4;
 		favsitespanel.setPreferredSize(new Dimension(1920, 250));
 		favsitespanel.setMinimumSize(new Dimension(950, 250));
+		favsitespanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		this.add(favsitespanel, c);
+		
+		c.gridy = 6;
+		exepanel.setPreferredSize(new Dimension(1920, 250));
+		exepanel.setMinimumSize(new Dimension(950, 250));
+		exepanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		
+		this.add(exepanel, c);
 		
 		
 		this.pack();
@@ -109,6 +125,13 @@ public class Jarvis extends JFrame implements ActionListener{
 	public void genfavsitespanel(){
 		favsitespanel = new HotlinkFrame();
 		((HotlinkFrame)favsitespanel).initialize();
+//		favsitespanel.setBackground(new Color(200,50,190));
+	}
+	
+	public void genExepanel(){
+		exepanel = new ShortcutFrame();
+		((ShortcutFrame)exepanel).initialize();
+//		exepanel.setBackground(new Color(0,128,0));
 	}
 	
 	public void genbuttonpanel(){
