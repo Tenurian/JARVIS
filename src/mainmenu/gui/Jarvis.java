@@ -173,7 +173,7 @@ public class Jarvis extends JFrame implements ActionListener{
 			new contactbook.ContactBook();
 			break;
 		case "asteroids":
-			asteroids.Main.init();
+			edu.csc150.main.Main.init();
 		}
 	}
 }
