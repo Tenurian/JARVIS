@@ -13,7 +13,8 @@ import com.google.gson.JsonParser;
 
 public class WeatherInfo {
 
-	private final String sURL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=Salt+Lake+City&units=imperial";
+	private String sURL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=Salt+Lake+City&units=imperial";
+	private String location = "Salt Lake City";
 	private URL url;
 	private HttpURLConnection request;
 	private JsonParser jp = new JsonParser();
@@ -79,5 +80,35 @@ public class WeatherInfo {
 	}
 	public String getDesc(int day){
 		return this.desc[day];
+	}
+	public void setsURL(String sURL) {
+		this.sURL = sURL;
+		try{
+			url = new URL(sURL);
+			request = (HttpURLConnection) url.openConnection();
+			request.connect();
+			root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
+			rootobj = root.getAsJsonObject();
+			days = rootobj.get("list").getAsJsonArray();
+			temps = new double[days.size()];
+			max = new double[days.size()];
+			min = new double[days.size()];
+			desc = new String[days.size()];
+			setTemps();
+		}
+		catch(MalformedURLException e){
+			e.printStackTrace();
+		}
+		catch(IOException io){
+			io.printStackTrace();
+		}
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 }

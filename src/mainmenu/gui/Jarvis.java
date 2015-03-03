@@ -1,5 +1,6 @@
 package mainmenu.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -20,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+import src.ChatClient;
 import mainmenu.exebar.ShortcutFrame;
 import mainmenu.favsites.HotlinkFrame;
 import mainmenu.weather.WeatherInfo;
@@ -32,13 +34,13 @@ public class Jarvis extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 935456660030463827L;
 	private JPanel buttonpanel, weatherpanel, favsitespanel, exepanel;
 	private JButton am, cc, cb, as;
-	
+	private WeatherInfo w = new WeatherInfo();
 	public static final boolean COLOR_PANELS = false;
-	
+	private static String[] arguments;
 	public Jarvis(){
 		super("JARVIS - Java Run Virtual Secretary v1.0.0.1");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setPreferredSize(new Dimension(950,700));
+		this.setPreferredSize(new Dimension(1130,700));
 		this.setMinimumSize(getPreferredSize());
 		this.setLayout(new GridBagLayout());
 
@@ -81,9 +83,9 @@ public class Jarvis extends JFrame implements ActionListener{
 	}
 	
 	public void genweatherpanel(){
-		weatherpanel = new JPanel(new GridLayout());
+		weatherpanel = new JPanel(new BorderLayout());
+		JPanel weatherinnerpanel = new JPanel(new GridLayout());
 		String[] days = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-		WeatherInfo w = new WeatherInfo();
 		Calendar c = Calendar.getInstance();
 		c.setTime(c.getTime());
 		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
@@ -117,9 +119,62 @@ public class Jarvis extends JFrame implements ActionListener{
 	        x.gridy=2;
 	        dayPanel.add(deslab, x);
 	        dayPanel.setBackground(new Color(0,126,164));
-			weatherpanel.add(dayPanel);
+			weatherinnerpanel.add(dayPanel);
 		}
+		weatherpanel.add(new JLabel("Weather for "+w.getLocation(), JLabel.CENTER), BorderLayout.NORTH);
+		weatherpanel.add(weatherinnerpanel);
+		weatherinnerpanel.setBackground(new Color(0,126,164));
 		weatherpanel.setBackground(new Color(0,126,164));
+	}
+	
+	public void updateWeather(){
+		weatherpanel.removeAll();
+//		System.out.println(w.getLocation());
+		JPanel weatherinnerpanel = new JPanel(new GridLayout());
+		String[] days = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+		Calendar c = Calendar.getInstance();
+		c.setTime(c.getTime());
+		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+		for(int i = 0; i < 7; i++){
+			JPanel dayPanel = new JPanel(new GridBagLayout());
+			GridBagConstraints x = new GridBagConstraints();
+			JLabel daylab = new JLabel(days[dayOfWeek-1+i]);
+			JLabel highlab = new JLabel("High: "+w.getMax(i));
+			JLabel lowlab = new JLabel("Low: "+w.getMin(i));
+			JLabel deslab = new JLabel("Conditions: "+w.getDesc(i));
+	        BufferedImage image = null;
+			try {
+				image = ImageIO.read((java.net.URL)w.getIconURL(i));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        JLabel img = new JLabel(new ImageIcon(image));
+	        x.fill = GridBagConstraints.BOTH;
+	        x.gridx=0;
+	        x.gridy=0;
+	        dayPanel.add(daylab, x);
+	        x.gridx=1;
+	        dayPanel.add(highlab, x);
+	        x.gridx=0;
+	        x.gridy=1;
+	        dayPanel.add(img, x);
+	        x.gridx=1;
+	        dayPanel.add(lowlab, x);
+	        x.gridwidth=2;
+	        x.gridx=0;
+	        x.gridy=2;
+	        dayPanel.add(deslab, x);
+	        dayPanel.setBackground(new Color(0,126,164));
+			weatherinnerpanel.add(dayPanel);
+		}
+		weatherpanel.add(new JLabel("Weather for "+w.getLocation(), JLabel.CENTER), BorderLayout.NORTH);
+		weatherpanel.add(weatherinnerpanel);
+		weatherinnerpanel.setBackground(new Color(0,126,164));
+		weatherpanel.setBackground(new Color(0,126,164));
+		weatherpanel.revalidate();
+		weatherpanel.repaint();
+		this.revalidate();
+		this.repaint();
 	}
 	
 	public void genfavsitespanel(){
@@ -136,6 +191,14 @@ public class Jarvis extends JFrame implements ActionListener{
 	
 	public void genbuttonpanel(){
 		buttonpanel = new JPanel();
+		JButton locationset = new JButton("Change Location");
+		locationset.setActionCommand("locationset");
+		locationset.addActionListener(this);
+		JButton chatbutton = new JButton("IM");
+		chatbutton.setActionCommand("im");
+		chatbutton.addActionListener(this);
+		chatbutton.setToolTipText("Launches the Instant Messenger Client");
+		
 		am = new JButton("Account Manager");
 		cc = new JButton("Conversion Calculator");
 		cb = new JButton("Contact Book");
@@ -150,14 +213,17 @@ public class Jarvis extends JFrame implements ActionListener{
 		as.setActionCommand("asteroids");
 		as.addActionListener(this);
 		
+		buttonpanel.add(locationset);
 		buttonpanel.add(am);
 		buttonpanel.add(cb);
 		buttonpanel.add(cc);
 		buttonpanel.add(as);
+//		buttonpanel.add(chatbutton);
 	}
 	
 	public static void main(String[] args) {
 		new Jarvis();
+		arguments = args;
 	}
 
 	@Override
@@ -174,6 +240,18 @@ public class Jarvis extends JFrame implements ActionListener{
 			break;
 		case "asteroids":
 			edu.csc150.main.Main.init();
+			break;
+		case "locationset":
+			new mainmenu.weather.WeatherLocationSetter(w,this);
+			break;
+		case "im":
+			try {
+				ChatClient.main(arguments);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			break;
 		}
 	}
 }
