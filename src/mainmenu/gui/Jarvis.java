@@ -248,7 +248,6 @@ public class Jarvis extends JFrame implements ActionListener{
 			try {
 				ChatClient.main(arguments);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			break;

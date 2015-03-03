@@ -3,11 +3,13 @@ package mainmenu.exebar;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -15,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 
 @SuppressWarnings("serial")
 public class Shortcut extends JPanel implements ActionListener, Serializable{
@@ -42,6 +45,12 @@ public class Shortcut extends JPanel implements ActionListener, Serializable{
 				link = chooser2.getSelectedFile().getAbsolutePath();
 			}
 		}
+		
+
+		File file = new File(link);
+		Icon icon = FileSystemView.getFileSystemView().getSystemIcon(file);
+		name = new JLabel(linkName, icon, SwingConstants.LEFT);
+		
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		name.setText(this.linkName);
 		go.setHorizontalAlignment(SwingConstants.LEFT);
