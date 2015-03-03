@@ -36,7 +36,7 @@ public class Jarvis extends JFrame implements ActionListener{
 	public static final boolean COLOR_PANELS = false;
 	
 	public Jarvis(){
-		super("JARVIS - Java Run Virtual Assistant v1.0.0.1");
+		super("JARVIS - Java Run Virtual Secretary v1.0.0.1");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setPreferredSize(new Dimension(950,700));
 		this.setMinimumSize(getPreferredSize());
