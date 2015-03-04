@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Calendar;
 
+import javafx.scene.media.MediaException;
+
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -33,6 +35,7 @@ public class Jarvis extends JFrame implements ActionListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 935456660030463827L;
+	@SuppressWarnings("unused")
 	private JPanel buttonpanel, ambientpanel, weatherpanel, favsitespanel, exepanel;
 	private JButton am, cc, cb, as;
 	private WeatherInfo w = new WeatherInfo();
@@ -46,7 +49,7 @@ public class Jarvis extends JFrame implements ActionListener{
 		this.setLayout(new GridBagLayout());
 
 		genbuttonpanel();
-		genAmbientPanel();
+//		genAmbientPanel();
 		genweatherpanel();
 		genfavsitespanel();
 		
@@ -58,7 +61,7 @@ public class Jarvis extends JFrame implements ActionListener{
 		this.add(buttonpanel, c);
 		c.gridy=1;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(ambientpanel, c);
+//		this.add(ambientpanel, c);
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 		c.gridheight = 3;
@@ -87,7 +90,11 @@ public class Jarvis extends JFrame implements ActionListener{
 	}
 	
 	public void genAmbientPanel(){
-		ambientpanel = new ControlsPanel();
+		try{
+			ambientpanel = new ControlsPanel();
+		}catch(MediaException me){
+			System.out.println("unable to load media");
+		}
 	}
 	
 	public void genweatherpanel(){

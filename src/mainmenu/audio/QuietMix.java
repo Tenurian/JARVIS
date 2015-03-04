@@ -14,8 +14,15 @@ public class QuietMix extends JFXPanel{
 	 */
 	private static final long serialVersionUID = -2014395311651401980L;
 	private MediaPlayer mediaPlayer;
+	@SuppressWarnings("unused")
 	public QuietMix(){
-		File file = new File("QuietMix.mp3");
+		File file = new File("./QuietMix.mp3");
+		
+		new File(((System.getProperty("user.home") + "/Documents/").replace("\\", "/")) + "JARVIS/").mkdir();
+		
+		String quietmixurl = "https://dl-web.dropbox.com/get/QuietMix.mp3?_subject_uid=392468930&w=AABZsas7gugcvVLgw-fcjMnmBcOjdHbMtkmhMao0nKuklg";
+		
+		
 		Media hit = new Media(file.toURI().toString());
 		mediaPlayer = new MediaPlayer(hit);
 		mediaPlayer.setStopTime(Duration.INDEFINITE);
