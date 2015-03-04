@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
 import src.ChatClient;
+import mainmenu.audio.ControlsPanel;
 import mainmenu.exebar.ShortcutFrame;
 import mainmenu.favsites.HotlinkFrame;
 import mainmenu.weather.WeatherInfo;
@@ -32,7 +33,7 @@ public class Jarvis extends JFrame implements ActionListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 935456660030463827L;
-	private JPanel buttonpanel, weatherpanel, favsitespanel, exepanel;
+	private JPanel buttonpanel, ambientpanel, weatherpanel, favsitespanel, exepanel;
 	private JButton am, cc, cb, as;
 	private WeatherInfo w = new WeatherInfo();
 	public static final boolean COLOR_PANELS = false;
@@ -40,11 +41,12 @@ public class Jarvis extends JFrame implements ActionListener{
 	public Jarvis(){
 		super("JARVIS - Java Run Virtual Secretary v1.0.0.1");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setPreferredSize(new Dimension(1130,700));
+		this.setPreferredSize(new Dimension(1130,800));
 		this.setMinimumSize(getPreferredSize());
 		this.setLayout(new GridBagLayout());
 
 		genbuttonpanel();
+		genAmbientPanel();
 		genweatherpanel();
 		genfavsitespanel();
 		
@@ -54,22 +56,24 @@ public class Jarvis extends JFrame implements ActionListener{
 		c.gridheight = 1;
 		c.gridy = 0;
 		this.add(buttonpanel, c);
+		c.gridy=1;
+		c.fill = GridBagConstraints.BOTH;
+		this.add(ambientpanel, c);
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 		c.gridheight = 3;
-		c.gridy = 1;
-		c.fill = GridBagConstraints.BOTH;
+		c.gridy = 2;
 		weatherpanel.setMaximumSize(new Dimension(1920, 50));
 		weatherpanel.setPreferredSize(new Dimension(1920, 50));
 		this.add(weatherpanel, c);
 		c.gridheight = 1;
-		c.gridy = 4;
+		c.gridy = 5;
 		favsitespanel.setPreferredSize(new Dimension(1920, 250));
 		favsitespanel.setMinimumSize(new Dimension(950, 250));
 		favsitespanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		this.add(favsitespanel, c);
 		
-		c.gridy = 6;
+		c.gridy = 7;
 		exepanel.setPreferredSize(new Dimension(1920, 250));
 		exepanel.setMinimumSize(new Dimension(950, 250));
 		exepanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
@@ -80,6 +84,10 @@ public class Jarvis extends JFrame implements ActionListener{
 		this.pack();
         this.setLocationRelativeTo(null);
 		this.setVisible(true);
+	}
+	
+	public void genAmbientPanel(){
+		ambientpanel = new ControlsPanel();
 	}
 	
 	public void genweatherpanel(){
