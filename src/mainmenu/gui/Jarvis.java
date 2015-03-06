@@ -274,10 +274,12 @@ public class Jarvis extends JFrame implements ActionListener{
 				//run client
 				if(!mainmenu.im.ChatClient.frame.isVisible()){
 					try {
-						mainmenu.im.ChatClient.initialize("localhost");
 						String localaddress = ""+InetAddress.getLocalHost()+"";
 						localaddress = localaddress.substring(localaddress.indexOf("/")+1);
 						JOptionPane.showMessageDialog(null, "Your IP is: "+localaddress+"", "Your Server IP", JOptionPane.INFORMATION_MESSAGE);
+						mainmenu.im.ChatClient.first = true;
+						mainmenu.im.ChatClient.initialize("localhost");
+						mainmenu.im.ChatClient.first = true;
 					} catch (IOException e1) {
 						JOptionPane.showMessageDialog(null, "Error starting the client.", "Client Start Incomplete", JOptionPane.ERROR_MESSAGE);
 						e1.printStackTrace();
@@ -289,7 +291,9 @@ public class Jarvis extends JFrame implements ActionListener{
 				if(!mainmenu.im.ChatClient.frame.isVisible()){
 					//run client
 					try {
+						mainmenu.im.ChatClient.first = true;
 						mainmenu.im.ChatClient.initialize();
+						mainmenu.im.ChatClient.first = true;
 					} catch (IOException e1) {
 						JOptionPane.showMessageDialog(null, "Error starting the client.", "Client Start Incomplete", JOptionPane.ERROR_MESSAGE);
 						e1.printStackTrace();

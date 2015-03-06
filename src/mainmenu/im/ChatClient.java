@@ -1,5 +1,6 @@
 package mainmenu.im;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -24,16 +25,18 @@ public class ChatClient implements ActionListener{
 	public static JTextArea messageArea = new JTextArea(8, 40);
 	public static Timer refreshTimer = new Timer();
 	public static final int RPS = 60;
+	public static boolean first = false;
 	
 	public ChatClient() {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
-		textField.setEditable(false);
+		textField.setEditable(true);
 		messageArea.setEditable(false);
+		messageArea.setBackground(Color.white);
 		frame.getContentPane().add(textField, "South");
 		frame.getContentPane().add(new JScrollPane(messageArea), "Center");
 		frame.pack();
-		
+		frame.setLocationRelativeTo(null);
 		textField.addActionListener(this);
 	}
 
@@ -57,7 +60,10 @@ public class ChatClient implements ActionListener{
 		
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
+
 		refreshTimer.scheduleAtFixedRate(new RefreshScreen(), 0, 1000/RPS);
+		first = false;
+		frame.repaint();
 	}
 	
 	@SuppressWarnings("resource")
@@ -67,7 +73,10 @@ public class ChatClient implements ActionListener{
 		
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
+
 		refreshTimer.scheduleAtFixedRate(new RefreshScreen(), 0, 1000/RPS);
+		first = false;
+		frame.repaint();
 	}
 	
 	public static void initialize(String input) throws IOException {
