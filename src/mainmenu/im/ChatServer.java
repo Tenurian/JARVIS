@@ -11,8 +11,10 @@ public class ChatServer extends Thread{
 	private boolean serverRunning = true;
 	private HashSet<String> names = new HashSet<String>();
 	private HashSet<PrintWriter> writers = new HashSet<PrintWriter>();
+	public static boolean isrunning = false;
 	
 	public void run(){
+		isrunning = serverRunning;
 		System.out.println("Chat Server running!");
 		ServerSocket listener;
 		try {

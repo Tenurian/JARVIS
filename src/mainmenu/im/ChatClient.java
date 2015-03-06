@@ -26,7 +26,7 @@ public class ChatClient implements ActionListener{
 	public static final int RPS = 60;
 	
 	public ChatClient() {
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
 		textField.setEditable(false);
 		messageArea.setEditable(false);
@@ -50,6 +50,7 @@ public class ChatClient implements ActionListener{
 		return JOptionPane.showInputDialog(frame, "Choose a screen name: ", "Screen name Selection", JOptionPane.PLAIN_MESSAGE);
 	}
 
+	@SuppressWarnings("resource")
 	public void run() throws IOException {
 		String serverAddress = getServerAddress();
 		Socket socket = new Socket(serverAddress, 49196);
@@ -57,6 +58,20 @@ public class ChatClient implements ActionListener{
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
 		refreshTimer.scheduleAtFixedRate(new RefreshScreen(), 0, 1000/RPS);
+	}
+	
+	@SuppressWarnings("resource")
+	public void run(String input) throws IOException {
+		String serverAddress = input;
+		Socket socket = new Socket(serverAddress, 49196);
+		
+		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		out = new PrintWriter(socket.getOutputStream(), true);
+		refreshTimer.scheduleAtFixedRate(new RefreshScreen(), 0, 1000/RPS);
+	}
+	
+	public static void initialize(String input) throws IOException {
+		new ChatClient().run(input);
 	}
 	
 	public static void initialize() throws IOException {
