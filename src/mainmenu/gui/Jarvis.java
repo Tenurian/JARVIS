@@ -20,10 +20,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-import src.ChatClient;
 import mainmenu.audio.ControlsPanel;
 import mainmenu.exebar.ShortcutFrame;
 import mainmenu.favsites.HotlinkFrame;
@@ -233,7 +233,7 @@ public class Jarvis extends JFrame implements ActionListener{
 		buttonpanel.add(cb);
 		buttonpanel.add(cc);
 		buttonpanel.add(as);
-//		buttonpanel.add(chatbutton);
+		buttonpanel.add(chatbutton);
 	}
 	
 	public static void main(String[] args) {
@@ -260,10 +260,29 @@ public class Jarvis extends JFrame implements ActionListener{
 			new mainmenu.weather.WeatherLocationSetter(w,this);
 			break;
 		case "im":
-			try {
-				ChatClient.main(arguments);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			int x = JOptionPane.showConfirmDialog(null, "Would you like to host the server?");
+			if(x == JOptionPane.YES_OPTION){
+				//run server
+				try {
+					mainmenu.im.ChatServer.initialize();
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, "Error starting the server.", "Server Start Incomplete", JOptionPane.ERROR_MESSAGE);
+				}
+				//run client
+				try {
+					mainmenu.im.ChatClient.initialize();
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, "Error starting the client.", "Client Start Incomplete", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
+				}
+			}else if(x == JOptionPane.NO_OPTION){
+				//run client
+				try {
+					mainmenu.im.ChatClient.initialize();
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, "Error starting the client.", "Client Start Incomplete", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
+				}
 			}
 			break;
 		}

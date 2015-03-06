@@ -100,6 +100,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 	 * Basic Constructor, sets up the JFrame
 	 */
 	public AccountManagerGUI(){
+		super("Account & Password Manager");
 		saved = false;
 		loaded = false;
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -224,6 +225,7 @@ public class AccountManagerGUI extends JFrame implements ActionListener{
 		botpanel.setLayout(new BoxLayout(botpanel, BoxLayout.Y_AXIS));
 		urlpan.setLayout(new BoxLayout(urlpan, BoxLayout.X_AXIS));
 		editcba.setActionCommand("editupdate2");
+		editcba.setSelected(true);
 		editcba.addActionListener(this);
 		botpanel.add(editcba);
 		editchooserbutton = new JButton("Choose Program");
