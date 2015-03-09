@@ -32,9 +32,6 @@ import mainmenu.weather.WeatherInfo;
 
 public class Jarvis extends JFrame implements ActionListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 935456660030463827L;
 	@SuppressWarnings("unused")
 	private JPanel buttonpanel, ambientpanel, weatherpanel, favsitespanel, exepanel;
