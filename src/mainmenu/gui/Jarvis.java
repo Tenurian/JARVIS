@@ -36,7 +36,7 @@ public class Jarvis extends JFrame implements ActionListener{
 	@SuppressWarnings("unused")
 	private JPanel buttonpanel, ambientpanel, weatherpanel, favsitespanel, exepanel;
 	private JButton am, cc, cb, as;
-	private WeatherInfo w = new WeatherInfo();
+	private WeatherInfo w;
 	public static final boolean COLOR_PANELS = false;
 	public Jarvis(){
 		super("JARVIS - Java Run Virtual Secretary v1.0.0.1");
@@ -96,46 +96,51 @@ public class Jarvis extends JFrame implements ActionListener{
 
 	public void genweatherpanel(){
 		weatherpanel = new JPanel(new BorderLayout());
-		JPanel weatherinnerpanel = new JPanel(new GridLayout());
-		String[] days = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-		Calendar c = Calendar.getInstance();
-		c.setTime(c.getTime());
-		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-		for(int i = 0; i < 7; i++){
-			JPanel dayPanel = new JPanel(new GridBagLayout());
-			GridBagConstraints x = new GridBagConstraints();
-			JLabel daylab = new JLabel(days[dayOfWeek-1+i]);
-			JLabel highlab = new JLabel("High: "+w.getMax(i));
-			JLabel lowlab = new JLabel("Low: "+w.getMin(i));
-			JLabel deslab = new JLabel("Conditions: "+w.getDesc(i));
-			BufferedImage image = null;
-			try {
-				image = ImageIO.read((java.net.URL)w.getIconURL(i));
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			w = new WeatherInfo();
+			JPanel weatherinnerpanel = new JPanel(new GridLayout());
+			String[] days = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+			Calendar c = Calendar.getInstance();
+			c.setTime(c.getTime());
+			int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+			for(int i = 0; i < 7; i++){
+				JPanel dayPanel = new JPanel(new GridBagLayout());
+				GridBagConstraints x = new GridBagConstraints();
+				JLabel daylab = new JLabel(days[dayOfWeek-1+i]);
+				JLabel highlab = new JLabel("High: "+w.getMax(i));
+				JLabel lowlab = new JLabel("Low: "+w.getMin(i));
+				JLabel deslab = new JLabel("Conditions: "+w.getDesc(i));
+				BufferedImage image = null;
+				try {
+					image = ImageIO.read((java.net.URL)w.getIconURL(i));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				JLabel img = new JLabel(new ImageIcon(image));
+				x.fill = GridBagConstraints.BOTH;
+				x.gridx=0;
+				x.gridy=0;
+				dayPanel.add(daylab, x);
+				x.gridx=1;
+				dayPanel.add(highlab, x);
+				x.gridx=0;
+				x.gridy=1;
+				dayPanel.add(img, x);
+				x.gridx=1;
+				dayPanel.add(lowlab, x);
+				x.gridwidth=2;
+				x.gridx=0;
+				x.gridy=2;
+				dayPanel.add(deslab, x);
+				dayPanel.setBackground(new Color(0,126,164));
+				weatherinnerpanel.add(dayPanel);
 			}
-			JLabel img = new JLabel(new ImageIcon(image));
-			x.fill = GridBagConstraints.BOTH;
-			x.gridx=0;
-			x.gridy=0;
-			dayPanel.add(daylab, x);
-			x.gridx=1;
-			dayPanel.add(highlab, x);
-			x.gridx=0;
-			x.gridy=1;
-			dayPanel.add(img, x);
-			x.gridx=1;
-			dayPanel.add(lowlab, x);
-			x.gridwidth=2;
-			x.gridx=0;
-			x.gridy=2;
-			dayPanel.add(deslab, x);
-			dayPanel.setBackground(new Color(0,126,164));
-			weatherinnerpanel.add(dayPanel);
+			weatherpanel.add(new JLabel("Weather for "+w.getLocation(), JLabel.CENTER), BorderLayout.NORTH);
+			weatherpanel.add(weatherinnerpanel);
+			weatherinnerpanel.setBackground(new Color(0,126,164));
+		} catch (IOException e1) {
+			weatherpanel.add(new JLabel("Cannot get weather: Please check internet connection", JLabel.CENTER), BorderLayout.CENTER);
 		}
-		weatherpanel.add(new JLabel("Weather for "+w.getLocation(), JLabel.CENTER), BorderLayout.NORTH);
-		weatherpanel.add(weatherinnerpanel);
-		weatherinnerpanel.setBackground(new Color(0,126,164));
 		weatherpanel.setBackground(new Color(0,126,164));
 	}
 

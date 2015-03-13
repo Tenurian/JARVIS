@@ -26,7 +26,7 @@ public class WeatherInfo {
 	private double[] max;
 	private double[] min;
 	
-	public WeatherInfo(){
+	public WeatherInfo() throws IOException{
 		try{
 			url = new URL(sURL);
 			request = (HttpURLConnection) url.openConnection();
@@ -42,9 +42,6 @@ public class WeatherInfo {
 		}
 		catch(MalformedURLException e){
 			e.printStackTrace();
-		}
-		catch(IOException io){
-			io.printStackTrace();
 		}
 	}
 

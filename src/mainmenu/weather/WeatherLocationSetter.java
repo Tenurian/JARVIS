@@ -21,7 +21,7 @@ public class WeatherLocationSetter extends JFrame implements ActionListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 8906353616807304766L;
-	private WeatherInfo w = new WeatherInfo();
+	private WeatherInfo w;
 	private String URL = "";
 	private String[] states = {"STATE","Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"};
 	private String[][] cities = {
@@ -124,7 +124,6 @@ public class WeatherLocationSetter extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == statecb){
-//			System.out.println(statecb.getSelectedItem()+","+statecb.getSelectedIndex());
 			citycb.setEnabled(true);
 			String[] bort = cities[statecb.getSelectedIndex()-1];
 			citymodel = (MutableComboBoxModel)new JComboBox().getModel();
