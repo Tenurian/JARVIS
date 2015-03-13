@@ -3,12 +3,15 @@ package mainmenu.im;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import javax.swing.GroupLayout;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -17,24 +20,27 @@ import javax.swing.JTextField;
 
 public class ChatClient implements ActionListener{
 	
-	public static BufferedReader in;
-	public static PrintWriter out;
+	public BufferedReader in;
+	public PrintWriter out;
 	public static JFrame frame = new JFrame("Chat Room Client");
 	public static JTextField textField = new JTextField(40);
-	public static JTextArea messageArea = new JTextArea(8, 40);
+	public static JTextArea messageArea = new JTextArea(24, 40);
 	public RefreshScreen rs = new RefreshScreen();
+	public static GroupLayout layout = new GroupLayout(frame);
 	public static final int RPS = 60;
 	public static boolean first = false;
+	private boolean isClientRunning = false;
 	
 	public ChatClient() {
+		isClientRunning = true;
+		frame.addWindowListener(new WindowStuff());
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
 		textField.setEditable(true);
 		messageArea.setEditable(false);
-		messageArea.setFocusable(true);
 		messageArea.setBackground(Color.white);
-		frame.getContentPane().add(textField, "South");
 		frame.getContentPane().add(new JScrollPane(messageArea), "Center");
+		frame.getContentPane().add(textField, "South");
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		textField.addActionListener(this);
@@ -62,8 +68,8 @@ public class ChatClient implements ActionListener{
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
 		
-		if (!rs.isAlive())
-			rs.start();
+		rs.start();
+		
 		first = false;
 		frame.repaint();
 	}
@@ -77,8 +83,12 @@ public class ChatClient implements ActionListener{
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
 
-		if (!rs.isAlive())
+		if (!rs.isAlive()){
 			rs.start();
+		}
+		else {
+			System.out.println("ohhh snap!!");
+		}
 		first = false;
 		frame.repaint();
 	}
@@ -95,17 +105,22 @@ public class ChatClient implements ActionListener{
 		
 		@Override
 		public void run() {
-			while (true){
+			while (isClientRunning){
 			String line = "";
 				try {
 					line = in.readLine();
 					System.out.println(line);
 					
-					if (line.startsWith("SUBMITNAME")){
+					if (!isClientRunning){
+						out.println("LOGOUT");
+					}
+					else if (line.startsWith("SUBMITNAME")){
 						out.println(ChatClient.getName());
 					}
 					else if (line.startsWith("NAMEACCEPTED")){
 						textField.setEditable(true);
+						messageArea.append(line.substring(13) + " has joined the chat room!\n");
+						textField.setText("");
 					}
 					else if (line.startsWith("MESSAGE")){
 						messageArea.append(line.substring(8) + "\n");
@@ -113,10 +128,20 @@ public class ChatClient implements ActionListener{
 					else if (line.startsWith("NAMEINUSE")){
 						//TODO Let user know The name is already taken!
 					}
-				} catch (IOException e) {
+				} 
+				catch (IOException e) {
+					System.out.println(e);
 					break;
 				}
 			}
+		}
+	}
+	
+	private class WindowStuff extends WindowAdapter{
+		
+		@Override
+		public void windowClosed(WindowEvent e){
+			isClientRunning = false;
 		}
 	}
 }

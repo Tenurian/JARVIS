@@ -45,35 +45,38 @@ public class Handler extends Thread{
 				}
 			}
 
-			out.println("NAMEACCEPTED");
+			out.println("NAMEACCEPTED " + name);
 			writers.add(out);
-
+			
 			while (true){
 				String input = in.readLine();
 				if (input == null){
 					return;
 				}
-				if (!input.equals("")){
+				if (input.equals("LOGOUT")){
+					removeUser();
+				}
+				else if (!input.trim().equals("")){
 					for (PrintWriter w: writers){
 						w.println("MESSAGE " + name + ": " + input);
-						break;
 					}
 				}
 			}
 		} catch (IOException e){
 			System.out.println(e);
-		} finally {
-			if (name != null){
-				names.remove(name);
-			}
-			if (out != null){
-				writers.remove(out);
-			}
-			try{
-				socket.close();
-			} catch (IOException e){
-			}
 		}
-		System.out.println("Handler closed!!");
+	}
+	
+	private void removeUser(){
+		if (name != null){
+			names.remove(name);
+		}
+		if (out != null){
+			writers.remove(out);
+		}
+		try{
+			socket.close();
+		} catch (IOException e){
+		}
 	}
 }
