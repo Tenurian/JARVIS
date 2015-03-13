@@ -97,6 +97,7 @@ public class Jarvis extends JFrame implements ActionListener{
 	public void genweatherpanel(){
 		weatherpanel = new JPanel(new BorderLayout());
 		try {
+			//bort
 			w = new WeatherInfo();
 			JPanel weatherinnerpanel = new JPanel(new GridLayout());
 			String[] days = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat","Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
