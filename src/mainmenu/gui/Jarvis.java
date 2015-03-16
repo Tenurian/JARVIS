@@ -141,6 +141,7 @@ public class Jarvis extends JFrame implements ActionListener{
 			weatherinnerpanel.setBackground(new Color(0,126,164));
 		} catch (IOException e1) {
 			weatherpanel.add(new JLabel("Cannot get weather: Please check internet connection", JLabel.CENTER), BorderLayout.CENTER);
+			e1.printStackTrace();
 		}
 		weatherpanel.setBackground(new Color(0,126,164));
 	}

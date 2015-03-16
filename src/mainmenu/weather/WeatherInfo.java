@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class WeatherInfo {
-
 	private String sURL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=Salt+Lake+City&units=imperial";
 	private String location = "Salt Lake City";
 	private URL url;
